@@ -4,7 +4,7 @@ bin_file = "#{install['bin_path']}/#{install['bin']}"
 remote_file install['download_path'] do
   source install['download_file']
   mode '0644'
-  not_if { ::File.exists?(bin_file) }
+  not_if { ::File.exists?(bin_file) or ::File.exists?(install['download_path']) }
 end
 
 bash 'extract remote_syslog2' do
