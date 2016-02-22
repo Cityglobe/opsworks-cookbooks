@@ -17,8 +17,10 @@ node[:deploy].each do |application, deploy|
       source 'remote_syslog2.yml.erb'
       mode 0664
 
+      hostname = "#{node[:opsworks][:stack][:name]}_#{node[:opsworks][:instance][:hostname]}"
+
       variables({
-        hostname: node[:opsworks][:instance][:hostname],
+        hostname: hostname,
         application: application,
         rails_env: node[:deploy][application][:rails_env],
         destination: {
