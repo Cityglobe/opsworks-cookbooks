@@ -7,7 +7,11 @@ node[:deploy].each do |application, deploy|
 
   if node[:remote_syslog2][application]
 
+    Chef::Log.debug("Creating remote_syslog2 config for #{application}")
+
     config = node[:remote_syslog2][application]
+
+    Chef::Log.debug("Creating remote_syslog2 file at #{node['remote_syslog2']['config_file']}")
 
     template node['remote_syslog2']['config_file'] do
       source 'remote_syslog2.yml.erb'
@@ -23,8 +27,11 @@ node[:deploy].each do |application, deploy|
         }
       })
 
-      mode '0644'
       notifies :restart, 'service[remote_syslog2]', :delayed
+
+      Chef::Log.debug("remote_syslog2 configuration written")
     end
+  else
+    Chef::Log.debug("Skipping remote_syslog2 config creating for #{application}")
   end
 end
