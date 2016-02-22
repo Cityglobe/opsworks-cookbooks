@@ -2,6 +2,7 @@ install = node['remote_syslog2']['install']
 bin_file = "#{install['bin_path']}/#{install['bin']}"
 
 remote_file install['download_path'] do
+  use_last_modified false
   source install['download_file']
   mode '0644'
   not_if { ::File.exists?(bin_file) or ::File.exists?(install['download_path']) }
