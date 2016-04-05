@@ -61,11 +61,20 @@ node[:deploy].each do |application, deploy|
       end
     end
 
+    env_variables = []
+
+    if deploy[:environment_variables]
+      deploy[:environment_variables].each do |var_name, var_value|
+        env_variables.push "#{var_name.to_s.upcase}=#{var_value}"
+      end
+    end
+
     template "#{node[:monit][:conf_dir]}/sidekiq_#{application}.monitrc" do
       mode 0644
       source "sidekiq_monitrc.erb"
       variables({
         :deploy => deploy,
+        :env_variables => env_variables.join(' '),
         :application => application,
         :workers => workers,
         :syslog => node[:sidekiq][application][:syslog]
